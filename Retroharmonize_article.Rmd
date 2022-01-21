@@ -1,0 +1,165 @@
+---
+title: "retroharmonize"
+author: "Daniel Antal, CFA"
+date: "1/21/2022"
+output:
+  pdf_document: default
+  html_document: default
+bibliography:
+- statisticalmethodology.bib
+- datascience.bib
+- r_packages.bib
+- datainteroperability.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+_A short (ca. 100 word) summary of the software being described: what problem the software addresses, how it was implemented and architected, where it is stored, and its reuse potential._
+
+Survey data harmonization refers to procedures that improve the data comparability or the inferential capacity of multiple surveys conducted in different periods of time, or in different geographical locations, potentially using different languages.  The retroharmonize package support various data processing, documentation, file/type conversion aspects of various survey harmonization workflows.
+
+## Keywords
+survey data; survey harmonization; statistical matching, open data
+Keywords should make it easy to identify who and what the software will be useful for.
+
+_An overview of the software, how it was produced, and the research for which it has been used, including references to relevant research articles. A short comparison with software which implements similar functionality should be included in this section._
+
+Surveys, i.e., systematic primary observation and data collections are important data sources of both social and natural sciences. They are in most cases the primary data sources of scientific research.  Drawing information from several surveys, conducted in different locations or in different time can greatly enhance the inferential capacity of the surveys, but it requires significant data processing and statistical processing work. 
+
+Survey data harmonization refers to procedures that improve the data comparability or the inferential capacity of multiple surveys conducted in different periods of time, or in different geographical locations, using different languages. Retrospective harmonization, or “survey recycling” is a practice for integrating information from two or more data sources, and to create a from several survey documentations, several codebooks, and several data tables, single, consolidated documents, and tables.  [@slomczynski_principles_survey_data_recycling_2018]
+
+Survey harmonization is closely related to the concept of statistical matching, also known as data fusion or data matching, the practice of “drawing information piecewise from different independent sample surveys”, particularly the bottom-up approaches to these problems. [@dorazio_statistical_2006, p1] Statistical matching takes survey recycling a step further, aiming to improve the statistical inference capacities of the joined dataset, for example, with creating a unified weighting for the variables.  In our software package we drew the line where the joined datasets, joined codebooks, and a general description is delivered: that is where our retroharmonize package aims to help. 
+
+In the R statistical ecosystem there is a mature package for statistical matching, [@r_package_statmatch], which gives a programmatic solution to the long contributions from the author in data matching.  However, we have not found a similarly comprehensive solution to retrospective survey harmonization.  There are several packages which fulfil partial tasks required to achieve a joined dataset and joined codebook, but not in a unified workflow and with all the ingredients present from importing an existing survey, processing both its data and metadata, and placing it into a more suitable format, augmented by variables necessary join data from several sources (such as an observation identifier that is truly unique among two or more original datasets, or potentially a consistent, new, post-stratification weight.)
+
+Our software builds on many earlier released open source software solutions that facilitate working with surveys. These tools were built for single surveys, therefore they do not treat the problems of conflicting coding of the same variable, conflicting naming of the same concept, or coercion problems when the same information is stored in different ways, gets imported into different R classes, and joining may result in unexpected output.
+
+The DDI Alliance has released the Structured Data Transformation Language (SDTL) has been designed for standardising an intermediate language for representing data transformation commands. Statistical analysis packages (e.g., SPSS, Stata, SAS, and R) provide similar functionality, but each one has its own proprietary language [@alter_provenance_2020]. Since the first, peer reviewed CRAN release of retroharmonize, the DDIwR package has been developed, but not yet released on CRAN and not yet fully documented [@r_package_DDIwR]. DDIwR solves similar problems that we solved with the introduction of the inherited s3 class labelled_spss_survey with a far more general and ambitious goal.  We foresee that in the future we will create full interoperability with that package, and indirectly with the survey harmonization efforts of the international DDI Alliance.
+
+
+## Implementation and architecture
+> How the software was implemented, with details of the architecture where relevant. Use of relevant diagrams is appropriate. Please also describe any variants and associated implementation differences.
+
+Retroharmonize was developed over several years with implementing more and more harmonization tasks in a reproducible manner [@kitzes_practice_2018], working with actual data that was *ex ante* harmonized on various levels, first with the European Eurobarometer series, then adding Afrobarometer, Lationbarometro and private surveys. These international survey research programs provide access to their harmonized surveys in “waves”. Usually, they call a way a set of ex ante harmonized surveys (containing the same questionnaire in several languages) in one data collection period. Our added value has been that we further harmonize data among waves (when data is not fully ex ante harmonized and requires ex post or retrospective harmonization.) While ex ante harmonized surveys are designed with the aim of ex post harmonization, in our experience, surveys taken across time (the Eurobarometer survey have an almost 50-years of history), using different software solutions available at the time, creates plenty of retrospective harmonization tasks even in these cases.
+
+Our work is building on, an extending many elements of the tidyverse R software packages that "share an underlying design philosophy, grammar, and data structures" of tidy data [@tidyverse_2019]. "Tidy datasets are easy to manipulate, model and visualize, and have a specific structure: each variable is a column, each observation is a row, and each type of observational unit is a table." [@wickham_tidy_data_2014] Processing survey data, usually stored in more complex sturctures of data and descriptive metadata (coding) into tidy forms is essential for harmonizing variable names, labels, identifiers, and add new auxiliary data, such as unified weights, for further statistical analysis. Tidy datasets lend themselves to easier unit testing, too.
+
+1. **Importing survey data**:  Most surveys are stored in some special, statistical file format, usually SPSS's .sav or STATA's dta file. Our package depends on, and adds functionality to two, widely used R packages that can manage the data and metadata of a single survey, but do not check metadata inconsisentencies when joining data from several surveys. Our importing functions add functionality to the  `read_sav` and `read_dta` functions of the haven package [@r_package_haven]. The haven package in itself builds upon the `labelled` S3 class and its methods [@r_package_labelled]. We had to create an inherited class from `labelled` and `labelled_spss` to add the necessary consistency checks to metadata and coercion rules, when the data arrives from different datasets and files.  For example, in Survey 1 the data may be read as a factor variable into R, and with the same coding, read as a numeric into R from Survey 2. Naive concatenation can have unintended effects, or stop with an error message in case of a mismatch between `labelled` and `labelled_spss`. 
+
+2. **Concept harmonization**: We created functions that help understanding what concepts are represented in the survey, and how they can be harmonized. Our `metadata_create` function creates an exploratory mapping of the selected files to overview the basic statistical properties of the data, the idiosyncracies of the metadata, and potential R type conflicts in coercion.
+
+3. **Crosswalk**:  we use a simple crosswalk schema, or crossswalk table to define variable harmonization, variable code and label harmonization, and R type conversion steps in the output harmonization.  There are several R packages that are tacking a similar problem. The R package crosswalkr strongly overlaps with our approach to crosswalk, but critically, it does not work with SPSS files [@r_package_crosswalkr], which is the most commonly used data file type storing survey data in openly availalbe international harmonized survey programs. 
+
+4. **Type conversion**: When the harmonized output is not a simple harmonized dataset, but a harmonized statistic or a harmonized indicator, the harmonized dataset needs further statistical processing. To unleash the vast potential of R's statistical package ecosystems, it is important to harmonize the data into R's base classes, numeric for numerical statistics and factor for categorical statististc.  (Often the same data can be given both numeric and factor representation.) Our inherited tidyverse s3 classes, survey and labelled_spss_survey were designed to make these procedures well documented, reproducible, and unambiguous.  The most frequently used file format for survey data is SPSS, which uses a code/label representation that, when imported without our added consistency checks, can be coerced to numerical or factor formats that result in serious logical errors. (This is mainly due to the cause that responses which must be translated to NA_real_ in numeric format are always coded as integers in SPSS--and their interger values and labels indicating missigness are not harmonized.)
+
+5. **Codebook creation**: Our aim is to create high value output that can be further developed with statistical matching, and eventually analysed in a scientific or well-docuemnted policy/business workflow. This means that we re-code and retain as much descriptive and processing metadata as possible, and eventually allow the exporting of a consistent codebook.
+
+Our package has a rich, long-form, vignette article documentation with examples on how to perform survey harmonization Eurostat, Afrobarometer, and Arab Barometer survey files. 
+
+## Quality control 
+Detail the level of testing that has been carried out on the code (e.g. unit, functional, load etc.), and in which environments. If not already included in the software documentation, provide details of how a user could quickly understand if the software is working (e.g. providing examples of running the software with sample input and output data). 
+
+Retroharmonize was extensively tested on privately conducted surveys, and three large, international, ex ante harmonized survey programs (questionnaire-based social science research aimed for ex post or retrospective harmonization across countries and years): Eurobarometer, Afrobarometer and Latinobarometro. 
+
+Our aim was to create a package that can accompany a social scientist working with surveys on a personal computer. We soon realized that working with ex ante harmonized surveys may potentially lead plenty of resources, particularly because the typical file format used for surveys, SPSS, due to its dual data-metadata coding, is not very efficiently imported with tidyverse's haven to R.  All important functions were designed to work either with a list of surveys being documented, subsetted, renamed, recoded, or sequentially.  These functions can take an optional survey_paths (full path) or survey_path and import_path (directory) input, in which case each task is performed sequentially.  The optinal export_path, when given, saves the sequentially intermediate or final outputs with saveRDS as R objects. 
+
+Our aim was to create a package that can accompany a social scientist working with surveys on a personal computer. We soon realized that working with ex ante harmonized surveys may potentially lead plenty of resources, particularly because the typical file format used for surveys, SPSS, due to its dual data-metadata coding, is not very efficiently imported with tidyverse's haven to R.  All important functions were designed to work either with a list of surveys being documented, subsetted, renamed, recoded, or sequentially.  These functions can take an optional survey_paths (full path) or survey_path and import_path (directory) input, in which case each task is performed sequentially.  The optinal export_path, when given, saves the sequentially intermediate or final outputs with saveRDS as R objects.
+
+This allows a much faster looping when sufficient memory is present, or a slower looping over files.  We also included simple functions for resource planning, and tutorials to show the optimal workflow (usually subsetting of many SPSS files should be done sequentially but the later stages of harmonization can take place in memory.)
+
+For unit testing, we included in the R package three subsets of published Eurobarometer surveys. The package’s unit testing consists of about 130-unit tests made with this real-life survey excepts.
+
+
+# Availability 
+
+## Operating system
+The retroharmonize R package is tested to run on several different operating systems. [According to Microsoft](https://mran.microsoft.com/releases/3.5.0), R 3.5.0 is tested and guaranteed to run on the following platforms: Windows® 7.0 SP1 or later, Ubuntu 14.04 or later, CentOS / Red Hat Enterprise Linux 6.5 or later, SUSE Linux Enterprise Server 11 or later, Mac OS X El Capitan (10.11) or later macOS versions.
+
+## Programming language
+The retroharmonize R package depends on R version 3.5.0 or higher.
+
+## Additional system requirements
+[According to Microsoft](https://mran.microsoft.com/releases/3.5.0), minimum system requirements for R 3.5.0 are 64-bit processor with x86-compatible architecture, 250 MB of free disk space and at least 1 GB of RAM. These requirements are met by most computers sold in the last 10 years.
+
+On more modern R versions, the package [is tested to run](https://cloud.r-project.org/web/checks/check_results_retroharmonize.html) on a [wide variety of operating systems and system configurations](https://cloud.r-project.org/web/checks/check_flavors.html), including ARM-based Macs.
+
+## Dependencies
+The retroharmonize R package depends only on R (version 3.5.0 or greater). The package imports functions from the following packages:
+* R Core packages: methods, stats, utils;
+* tidyverse packages: dplyr (1.0.0 or greater), glue, haven, magrittr, stringr, tibble, tidyr, purrr; 
+* R infrastructure (r-lib) packages: fs, here, pillar, rlang, tidyselect, vctrs; and
+* other R packages: assertthat, labelled, snakecase
+
+The retroharmonize R package is practically a very thorough extension of the R tidyverse packages: it depends on haven (and labelled) for working with coded survey files. It uses dplyr, tidyr (and their common, deep level rlang, vctrs) dependencies for variable manipulation within a single survey (preparation for harmonization) and purrr for functional programming task with several surveys. 
+
+## List of contributors
+Please list anyone who helped to create the software (who may also not be an author of this paper), including their roles and affiliations.
+
+Marta Kolcynska as a survey harmonization expert contributed to the conceptual development of the first documentation, building the first use cases and exploring various survey harmonization workflows that may need a reproducible and computational support.
+
+## Software location:
+Archive (e.g. institutional repository, general repository) (required – please see instructions on journal website for depositing archive copy of software in a suitable repository) 
+Name: CRAN
+Persistent identifier: https://CRAN.R-project.org/package=retroharmonize 
+Licence: GPL-3
+Publisher: Daniel Antal
+Version published: 0.2.0
+Date published: 02/11/21
+Code repository (e.g. SourceForge, GitHub etc.) (required) 
+Name: retroharmonize
+Identifier: https://github.com/rOpenGov/retroharmonize
+Licence: GPL-3
+Date published: 15/12/21
+Emulation environment (if appropriate)
+Name: The name of the emulation environment
+Identifier: The identifier (or URI) used by the emulator
+Licence: Open license under which the software is licensed here
+Date published: dd/mm/yy
+
+## Language
+Language of repository, software and supporting files
+
+English
+
+# Reuse potential 
+Please describe in as much detail as possible the ways in which the software could be reused by other researchers both within and outside of your field. This should include the use cases for the software, and also details of how the software might be modified or extended (including how contributors should contact you) if appropriate. Also you must include details of what support mechanisms are in place for this software (even if there is no support).
+
+The retroharmonize R package aims to provide a versatile support for various survey harmonization workflows. Because surveys are so fundamental to quantitative social science research and play an important role in many natural science fields, not to mention commercial applications of market research or pharmaceutical research, the package’s main reuse potential is to be a foundation of further reproducible research software aimed to automate research and harmonization aspects of specific survey programs.
+
+The authors of this package started the development work to be able to harmonize surveys from harmonized data collections of the European Union: namely the Eurobarometer and AES surveys programs.  After working with various surveys (also outside these programs) it became clear that retroharmoinze should aim to be a common demoninator to a family of similar software that solves more specific problems.  The world’s largest and oldest international public policy survey series, Eurobarometer.  This program alone has conducted already thousands of surveys in more than 20 natural languages over more than 40 years, following various documentation, data management, coding practices that were not independent of the software tools available over this long period of time.  The first verion of retroharmonize was separated to the retroharmonize and the eurobarometer R packages – retroharmonize providing a more general framework that has been able to serve Eurobarometer’s, Afrobarometer’s and the Arab Barometer’s different needs. 
+
+In our view, the retroharmonize package has the potential to become a general supporting software for more specific codes aimed at harmonizing surveys based first on questionnaires, later on different data inputs, such as price scanning, laboratory tests, and other standardized, discrete inputs that are carried out in different locations, with different recording tools, and with different coding (for example, because of natural languages differences, as it is the case in the social science surveys used for the testing of our software.)
+
+
+
+## Acknowledgements
+Please add any relevant acknowledgements to anyone else who supported the project in which the software was created, but did not work directly on the software itself.
+
+## Funding statement 
+
+There was no funding available for the development of this software. 
+
+## Competing interests 
+“The authors declare that they have no competing interests.” 
+
+<!-- ## References  -->
+<!-- Please enter references in the Harvard style and include a DOI where available, citing them in the text with a number in square brackets, e.g. -->
+
+<!-- [1] 	Piwowar, H A 2011 Who Shares? Who Doesn't? Factors Associated with Openly Archiving Raw Research Data. PLoS ONE 6(7): e18657. DOI: http://dx.doi.org/10.1371/journal.pone.0018657. -->
+
+<!-- ## Copyright Notice -->
+<!-- Authors who publish with this journal agree to the following terms: -->
+
+<!-- Authors retain copyright and grant the journal right of first publication with the work simultaneously licensed under a Creative Commons Attribution License that allows others to share the work with an acknowledgement of the work's authorship and initial publication in this journal. -->
+
+<!-- Authors are able to enter into separate, additional contractual arrangements for the non-exclusive distribution of the journal's published version of the work (e.g., post it to an institutional repository or publish it in a book), with an acknowledgement of its initial publication in this journal. -->
+
+<!-- By submitting this paper you agree to the terms of this Copyright Notice, which will apply to this submission if and when it is published by this journal. -->
+
+
+## References
+
+
