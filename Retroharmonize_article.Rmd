@@ -1,10 +1,12 @@
 ---
-title: "retroharmonize"
+title: "Ex Post Survey Harmonization with retroharmonize"
 author: "Daniel Antal, CFA"
 date: "1/21/2022"
 output:
-  pdf_document: default
+  word_document: default
   html_document: default
+  pdf_document: default
+subtitle: 'Early Draft. DOI: 10.5281/zenodo.5887001'
 bibliography:
 - statisticalmethodology.bib
 - datascience.bib

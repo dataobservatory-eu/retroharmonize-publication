@@ -1,0 +1,28 @@
+---
+title: "Ex Post Harmonization And Data Integration of Cultural Access and Participation Surveys"
+author: "Daniel Antal, CFA"
+date: "1/26/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+subtitle: 'Early Draft.'
+bibliography:
+- statisticalmethodology.bib
+- datascience.bib
+- r_packages.bib
+- datainteroperability.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+
+
+
+
+## References
+

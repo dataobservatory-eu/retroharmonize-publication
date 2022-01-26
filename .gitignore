@@ -1,3 +1,6 @@
+# Exclude users' not_included directory
+^not_included/
+
 # History files
 .Rhistory
 .Rapp.history

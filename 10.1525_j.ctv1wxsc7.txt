@@ -1,0 +1,9 @@
+@book{10.1525/j.ctv1wxsc7,
+ ISBN = {9780520294745},
+ URL = {http://www.jstor.org/stable/10.1525/j.ctv1wxsc7},
+ edition = {1},
+ publisher = {University of California Press},
+ title = {The Practice of Reproducible Research: Case Studies and Lessons from the Data-Intensive Sciences},
+ year = {2018}
+}
+
