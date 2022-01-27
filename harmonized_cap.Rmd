@@ -3,8 +3,8 @@ title: "Ex Post Harmonization And Data Integration of Cultural Access and Partic
 author: "Daniel Antal, CFA"
 date: "1/27/2022"
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 subtitle: 'Early Draft.'
 bibliography:
