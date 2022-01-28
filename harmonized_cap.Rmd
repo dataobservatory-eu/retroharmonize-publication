@@ -53,12 +53,28 @@ In the conclusions, we will show what kind of picture one can get from a nationa
 
 We will refer here to the other small article introducing retroharmonize as a software.
 
+We used as inputs the data files containing the following surveys:
+
+- CAP Europe 2007: the datafile of the Eurobarometer Eurobarometer 67.1 (February-March 2007)---[@ZA4529]
+- CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013)---[@ZA5688], 
+- CAP Hungary 2017 / not yet included, I can add only a subset of the source file./
+
+The European surveys were taken within the Eurobarometer survey program, and we have access to an English-coded file that we always compare with the generic English-Franch questionnaire (which may not be identical to the actual, tested, localized English versions in the United Kingdom and Ireland.)
+
+The Hungarian surveys have an original Hungarian language questinnoare and coding. 
+
 ## Data integration
 
 ## Findings
 
 
+## Appendix {-}
 
+### Data sources {-}
+
+- CAP Europe 2007: the datafile of the Eurobarometer Eurobarometer 67.1 (February-March 2007), accompanied with the orgininal codebook, and the master questionnaire (we used the English version.) [@ZA4529]
+- CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013), accompanied with the orgininal codebook, and the master questionnaire (we used the English version. [@ZA5688], 
+- CAP Hungary 2017 / not yet included, I can add only a subset of the source file./
 
 ## References
 
