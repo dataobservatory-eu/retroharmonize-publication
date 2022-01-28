@@ -12,6 +12,7 @@ bibliography:
 - datascience.bib
 - r_packages.bib
 - datainteroperability.bib
+- datasources.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -21,15 +22,19 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 
 
-In this article, we will create a harmonized Cultural Access and Participation Dataset for live music and active participation (playing music and singing.)  The standardized CAP survey is the most important measurement of the topic.  It is a standardized, hierarchical survey. The Eurobarometer files contain the first and sometimes second priority questions, whereas the Hungary and Slovakia CAP contains third and fourth priority (granular) questions for music. 
+In this article, we will create a harmonized Cultural Access and Participation Dataset for live music and active participation (playing music and singing.)  The standardized CAP survey is the most important measurement of the topic.  It is a standardized, hierarchical survey. The Eurobarometer files contain the first and sometimes second priority questions, whereas the Hungary and Slovakia CAP contains third and fourth priority (granular) questions for music.
+
 Our harmonization and data integration will allow us to compare pan-European and national surveys, and the possibility to make inference from the far more detailed Hungary and Slovakia CAP to the less detailed Eurobarometer CAP which in turn has a far larger geographical coverage. 
+
 Our paper is structured as follows.  First, we introduce the concept of Cultural Access & Participation Surveys, and define a music-relevant subsets from 5 (hopefully 7 with Slovakia 2015,2020) CAP surveys. In the second part, we will show how we can create a unified longitudinal panel datasets for about 30 countries and 7 years with a uniform coding, and a unified codebook using reproducible ex post survey harmonization techniques, and the retroharmonize open source program library developed for this purpose. In the third part, we will introduce data integration or data fusion, when we will investigate the quality limitation of the unified dataset, and make potential statistical improvements for their joint use, for example, with creating an adjusted post-stratification weight for each observation.
 In the conclusions, we will show what kind of picture one can get from a national, a single-year pan-European CAP survey and how we can improve our knowledge about access to live music and participation in music with data integration.
 
-> NOTE: if the University of Bologna or the University of Turku has an agreement for Eurostat for microdata access (or you can send one) we can add three further CAP surveys, which are not in Eurobarometer (which is open access), but in AES, EU-SILC.
+> NOTE: if the University of Bologna or the University of Turku has an agreement for Eurostat for microdata access (or you can send one) we can add three further CAP surveys, which are not in Eurobarometer (which is open access), but in Adult Education Survey, European Survey on Income and Living Conditions, Time Use Surveys (with slightly different methodology.)
 
 
 ## Introduction to Cultural Access & Participation Measurement
+
+> A short text will come here on the basis of [@de_haan_nowadays_2012; @de_haan_virtuele_2008; @frank_guy_essnet-culture_2012]
 
 - `visit_concert`, `visit_cinema`, `visit_church`:  These are the standard CAP variables about visiting frequencies.  We will use cinema as a comparator to concerts. Church will be important to compare with singing, because in many parts of Europe mainly women sing and mainly in church ceremonies. The variables are differently coded in the Eurobarometer CAP 2007, Eurobarometer CAP 2013, and the Hungary CAP 2017, 2018, 2019 CAP surveys. Eurobarometer have them in categories (0, 1-2, 3-5, more) and the Hungary CAP has them as a number.  We will use these variables with different coding.  For visit_church, when available, we will convert it into a binary variable.
 - `played_music`:  A variable of the frequency of playing music as an amateur or professional practice, in some surveys we have only a binary variable (played in the last 12 months or not) in other we have frequencies. We will convert this into a binary variable. 
@@ -54,6 +59,8 @@ In the conclusions, we will show what kind of picture one can get from a nationa
 We will refer here to the other small article introducing retroharmonize as a software.
 
 We used as inputs the data files containing the following surveys:
+
+<!--- the survey files are references in datasources.bib -->
 
 - CAP Europe 2007: the datafile of the Eurobarometer Eurobarometer 67.1 (February-March 2007)---[@ZA4529]
 - CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013)---[@ZA5688], 
