@@ -21,7 +21,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-
 In this article, we will create a harmonized Cultural Access and Participation Dataset for live music and active participation (playing music and singing.)  The standardized CAP survey is the most important measurement of the topic.  It is a standardized, hierarchical survey. The Eurobarometer files contain the first and sometimes second priority questions, whereas the Hungary and Slovakia CAP contains third and fourth priority (granular) questions for music.
 
 Our harmonization and data integration will allow us to compare pan-European and national surveys, and the possibility to make inference from the far more detailed Hungary and Slovakia CAP to the less detailed Eurobarometer CAP which in turn has a far larger geographical coverage. 
@@ -51,8 +50,6 @@ In the conclusions, we will show what kind of picture one can get from a nationa
 - `region`:  A NUTS2 region of the respondent.  We will show some problems with this---but we will not go in this publication to small area statistics issues. 
 - `difficulty_bills`:  A subjective income variable that makes income comparable among many countries, it is a three value categorical variable describing the frequency of having difficulties paying the respondent’s bills (never, from time to time, always or almost always.)
 - `w`, `wex`:  post-stratification weights and projected weigths for the 15+ years old population of each country (treating Northern Ireland, Great Britain, the United Kingdom, the former GDR, the former West Germany, and Germany as six countries.)
-
-
 
 ## Retrospective survey harmonization
 
