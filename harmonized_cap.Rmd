@@ -36,11 +36,12 @@ In the conclusions, we will show what kind of picture one can get from a nationa
 > A short text will come here on the basis of [@de_haan_nowadays_2012; @de_haan_virtuele_2008; @frank_guy_essnet-culture_2012]
 
 - `visit_concert`, `visit_cinema`, `visit_church`:  These are the standard CAP variables about visiting frequencies.  We will use cinema as a comparator to concerts. Church will be important to compare with singing, because in many parts of Europe mainly women sing and mainly in church ceremonies. The variables are differently coded in the Eurobarometer CAP 2007, Eurobarometer CAP 2013, and the Hungary CAP 2017, 2018, 2019 CAP surveys. Eurobarometer have them in categories (0, 1-2, 3-5, more) and the Hungary CAP has them as a number.  We will use these variables with different coding.  For visit_church, when available, we will convert it into a binary variable.
-- `played_music`:  A variable of the frequency of playing music as an amateur or professional practice, in some surveys we have only a binary variable (played in the last 12 months or not) in other we have frequencies. We will convert this into a binary variable. 
-- `sung`: A variable of the frequency of singing as an amateur or professional practice, like played_muisc. Because of the liturgical use of singing, and the differences of religious practices among countries and gender, this is a significantly different variable from played_music.
-- `age`: The respondent’s age as an integer number. 
-`sex`: The respondent’s sex as a binary variable. 
-- `country`:  an ISO country code
+- `is_visit_concert`: binary variable, 0 if the person had not visited concerts in the previous 12 months.
+- `artistic_activity_played_music`:  A variable of the frequency of playing music as an amateur or professional practice, in some surveys we have only a binary variable (played in the last 12 months or not) in other we have frequencies. We will convert this into a binary variable. 
+- `artistic_activity_sung`: A variable of the frequency of singing as an amateur or professional practice, like played_muisc. Because of the liturgical use of singing, and the differences of religious practices among countries and gender, this is a significantly different variable from played_music.
+- `age_exact`: The respondent’s age as an integer number. 
+- `sex`: The respondent’s sex as a binary variable. 
+- `country_code`:  an ISO country code
 - `geo`: an ISO code that separates Germany to the former East and West Germany, and the United Kingdom to Great Britain and Northern Ireland, and Cyprus to Cyprus and the Turiksh Cypriot community.[we may leave Turkish Cyprus out for practical reasons.]
 - `cooperation`: the score of the cooperation level of the respondent, whenever available. 
 - `age_education`: This is a harmonized education proxy. Because we work with the data of more than 30 countries, education levels are difficult to harmonize, and we use the Eurobarometer standard proxy, age of leaving education.   It is a specially coded variable, and we will re-code them into two variables, `age_education` and `is_student`. 
@@ -49,7 +50,10 @@ In the conclusions, we will show what kind of picture one can get from a nationa
 - `occupation`, `occupation_recat_4`: a 14-level standardized occupation code, and a 4-leve grouping.  We will create dummy variables from both the 14 occupations and the 4 groups.
 - `region`:  A NUTS2 region of the respondent.  We will show some problems with this---but we will not go in this publication to small area statistics issues. 
 - `difficulty_bills`:  A subjective income variable that makes income comparable among many countries, it is a three value categorical variable describing the frequency of having difficulties paying the respondent’s bills (never, from time to time, always or almost always.)
-- `w`, `wex`:  post-stratification weights and projected weigths for the 15+ years old population of each country (treating Northern Ireland, Great Britain, the United Kingdom, the former GDR, the former West Germany, and Germany as six countries.)
+- `w`, `w1`: Post-stratification weights for the 15+ years old population of each country. Use `w1` for averages of `geo` entities treating Northern Ireland, Great Britain, the United Kingdom, the former GDR, the former West Germany, and Germany as geographical areas. Use `w` when treating the United Kingdom and Germany as one territory.
+- `wex`:  Projected weight variable. For weighted average values, use `w`, `w1`, for projections on the population size, i.e., use with sums, use `wex`.
+- `id`: The identifier of the original survey.
+- `rowid``: A new unique identifier that is unique in all harmonized surveys, i.e., remains unique in the harmonized dataset.
 
 ## Retrospective survey harmonization
 
@@ -63,11 +67,19 @@ We used as inputs the data files containing the following surveys:
 - CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013)---[@ZA5688], 
 - CAP Hungary 2017 / not yet included, I can add only a subset of the source file./
 
-The European surveys were taken within the Eurobarometer survey program, and we have access to an English-coded file that we always compare with the generic English-Franch questionnaire (which may not be identical to the actual, tested, localized English versions in the United Kingdom and Ireland.)
+The creation of a harmonized dataset and harmonization codebooks (in the form of schema crosswalk tables) can be found in the [documentation website](https://retroharmonize.dataobservatory.eu/articles/index.html) of the retroharmonize R software package and downloaded as an authoritative copy from Zenodo  [@creating_harmonized_cap_dataset_music].  As a code tutorial, we published the creation of a harmonized dataset from the Eurostat surveys, because they are available in microdata form, and the creation of the dataset can be fully replicated. This dataset is available as [10.5281/zenodo.5917742](https://doi.org/10.5281/zenodo.5917742), the full dataset with replication code as <not yet created> [@harmonized_cap_dataset_music].
 
-The Hungarian surveys have an original Hungarian language questinnoare and coding. 
+> I will create a unified file, and codebook, by early next week.  I already have the written approval to use the Hungary CAP 2015, 2017, 2018, 2019 data, and will seek a written approval for Slovakia 2015, and Slovakia 2020.  This may be too much, in which case we will select few national samples. 
+
+The European surveys were taken within the Eurobarometer survey program, and we have access to an English-coded file that we always compare with the generic English-Franch questionnaire. The European surveys are 'waves' of surveys, which means that in each EU country one, in the UK, Germany and Cyprus two surveys were conducted using the language localizations of the generic English-Franch questionnaire.  (which may not be identical to the actual, tested, localized English versions in the United Kingdom and Ireland.)
+
+The Hungarian surveys and Slovak survey have an original Hungarian and Slovak language questinnoare and coding, however, these surveys were following the Eurobarometer questionnaire's Hungarian and Slovak version. This means that they contain exactly the same questionnaire items as the Eurobarometer 2007 and Eurobarometer 2013 Hungarian and Slovak surveys, but the files have a Hungarian and Slovak codebook.
+
+Our software will create a crosswalk table that will help the creation of harmonized, English-language variable names and variable labels in all surveys. 
 
 ## Data integration
+
+> We should be running the data integration analysis through [@r_package_statmatch]  and in the other article explain how the capabilities of [@r_package_retroharmonize] are extended by d'Orazio's StatMatch.  
 
 ## Findings
 

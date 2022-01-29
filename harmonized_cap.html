@@ -57,6 +57,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -174,19 +196,26 @@ pre code {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In this article, we will create a harmonized Cultural Access and Participation Dataset for live music and active participation (playing music and singing.) The standardized CAP survey is the most important measurement of the topic. It is a standardized, hierarchical survey. The Eurobarometer files contain the first and sometimes second priority questions, whereas the Hungary and Slovakia CAP contains third and fourth priority (granular) questions for music. Our harmonization and data integration will allow us to compare pan-European and national surveys, and the possibility to make inference from the far more detailed Hungary and Slovakia CAP to the less detailed Eurobarometer CAP which in turn has a far larger geographical coverage. Our paper is structured as follows. First, we introduce the concept of Cultural Access &amp; Participation Surveys, and define a music-relevant subsets from 5 (hopefully 7 with Slovakia 2015,2020) CAP surveys. In the second part, we will show how we can create a unified longitudinal panel datasets for about 30 countries and 7 years with a uniform coding, and a unified codebook using reproducible ex post survey harmonization techniques, and the retroharmonize open source program library developed for this purpose. In the third part, we will introduce data integration or data fusion, when we will investigate the quality limitation of the unified dataset, and make potential statistical improvements for their joint use, for example, with creating an adjusted post-stratification weight for each observation. In the conclusions, we will show what kind of picture one can get from a national, a single-year pan-European CAP survey and how we can improve our knowledge about access to live music and participation in music with data integration.</p>
+<p>In this article, we will create a harmonized Cultural Access and Participation Dataset for live music and active participation (playing music and singing.) The standardized CAP survey is the most important measurement of the topic. It is a standardized, hierarchical survey. The Eurobarometer files contain the first and sometimes second priority questions, whereas the Hungary and Slovakia CAP contains third and fourth priority (granular) questions for music.</p>
+<p>Our harmonization and data integration will allow us to compare pan-European and national surveys, and the possibility to make inference from the far more detailed Hungary and Slovakia CAP to the less detailed Eurobarometer CAP which in turn has a far larger geographical coverage.</p>
+<p>Our paper is structured as follows. First, we introduce the concept of Cultural Access &amp; Participation Surveys, and define a music-relevant subsets from 5 (hopefully 7 with Slovakia 2015,2020) CAP surveys. In the second part, we will show how we can create a unified longitudinal panel datasets for about 30 countries and 7 years with a uniform coding, and a unified codebook using reproducible ex post survey harmonization techniques, and the retroharmonize open source program library developed for this purpose. In the third part, we will introduce data integration or data fusion, when we will investigate the quality limitation of the unified dataset, and make potential statistical improvements for their joint use, for example, with creating an adjusted post-stratification weight for each observation. In the conclusions, we will show what kind of picture one can get from a national, a single-year pan-European CAP survey and how we can improve our knowledge about access to live music and participation in music with data integration.</p>
 <blockquote>
-<p>NOTE: if the University of Bologna or the University of Turku has an agreement for Eurostat for microdata access (or you can send one) we can add three further CAP surveys, which are not in Eurobarometer (which is open access), but in AES, EU-SILC.</p>
+<p>NOTE: if the University of Bologna or the University of Turku has an agreement for Eurostat for microdata access (or you can send one) we can add three further CAP surveys, which are not in Eurobarometer (which is open access), but in Adult Education Survey, European Survey on Income and Living Conditions, Time Use Surveys (with slightly different methodology.)</p>
 </blockquote>
 </div>
 <div id="introduction-to-cultural-access-participation-measurement" class="section level2">
 <h2>Introduction to Cultural Access &amp; Participation Measurement</h2>
+<blockquote>
+<p>A short text will come here on the basis of <span class="citation">(Haan and Broek 2012; Haan and Adolfsen 2008; Bína, Vladimir et al. 2012)</span></p>
+</blockquote>
 <ul>
 <li><code>visit_concert</code>, <code>visit_cinema</code>, <code>visit_church</code>: These are the standard CAP variables about visiting frequencies. We will use cinema as a comparator to concerts. Church will be important to compare with singing, because in many parts of Europe mainly women sing and mainly in church ceremonies. The variables are differently coded in the Eurobarometer CAP 2007, Eurobarometer CAP 2013, and the Hungary CAP 2017, 2018, 2019 CAP surveys. Eurobarometer have them in categories (0, 1-2, 3-5, more) and the Hungary CAP has them as a number. We will use these variables with different coding. For visit_church, when available, we will convert it into a binary variable.</li>
-<li><code>played_music</code>: A variable of the frequency of playing music as an amateur or professional practice, in some surveys we have only a binary variable (played in the last 12 months or not) in other we have frequencies. We will convert this into a binary variable.</li>
-<li><code>sung</code>: A variable of the frequency of singing as an amateur or professional practice, like played_muisc. Because of the liturgical use of singing, and the differences of religious practices among countries and gender, this is a significantly different variable from played_music.</li>
-<li><code>age</code>: The respondent’s age as an integer number. <code>sex</code>: The respondent’s sex as a binary variable.</li>
-<li><code>country</code>: an ISO country code</li>
+<li><code>is_visit_concert</code>: binary variable, 0 if the person had not visited concerts in the previous 12 months.</li>
+<li><code>artistic_activity_played_music</code>: A variable of the frequency of playing music as an amateur or professional practice, in some surveys we have only a binary variable (played in the last 12 months or not) in other we have frequencies. We will convert this into a binary variable.</li>
+<li><code>artistic_activity_sung</code>: A variable of the frequency of singing as an amateur or professional practice, like played_muisc. Because of the liturgical use of singing, and the differences of religious practices among countries and gender, this is a significantly different variable from played_music.</li>
+<li><code>age_exact</code>: The respondent’s age as an integer number.</li>
+<li><code>sex</code>: The respondent’s sex as a binary variable.</li>
+<li><code>country_code</code>: an ISO country code</li>
 <li><code>geo</code>: an ISO code that separates Germany to the former East and West Germany, and the United Kingdom to Great Britain and Northern Ireland, and Cyprus to Cyprus and the Turiksh Cypriot community.[we may leave Turkish Cyprus out for practical reasons.]</li>
 <li><code>cooperation</code>: the score of the cooperation level of the respondent, whenever available.</li>
 <li><code>age_education</code>: This is a harmonized education proxy. Because we work with the data of more than 30 countries, education levels are difficult to harmonize, and we use the Eurobarometer standard proxy, age of leaving education. It is a specially coded variable, and we will re-code them into two variables, <code>age_education</code> and <code>is_student</code>.</li>
@@ -195,21 +224,81 @@ pre code {
 <li><code>occupation</code>, <code>occupation_recat_4</code>: a 14-level standardized occupation code, and a 4-leve grouping. We will create dummy variables from both the 14 occupations and the 4 groups.</li>
 <li><code>region</code>: A NUTS2 region of the respondent. We will show some problems with this—but we will not go in this publication to small area statistics issues.</li>
 <li><code>difficulty_bills</code>: A subjective income variable that makes income comparable among many countries, it is a three value categorical variable describing the frequency of having difficulties paying the respondent’s bills (never, from time to time, always or almost always.)</li>
-<li><code>w</code>, <code>wex</code>: post-stratification weights and projected weigths for the 15+ years old population of each country (treating Northern Ireland, Great Britain, the United Kingdom, the former GDR, the former West Germany, and Germany as six countries.)</li>
+<li><code>w</code>, <code>w1</code>: Post-stratification weights for the 15+ years old population of each country. Use <code>w1</code> for averages of <code>geo</code> entities treating Northern Ireland, Great Britain, the United Kingdom, the former GDR, the former West Germany, and Germany as geographical areas. Use <code>w</code> when treating the United Kingdom and Germany as one territory.</li>
+<li><code>wex</code>: Projected weight variable. For weighted average values, use <code>w</code>, <code>w1</code>, for projections on the population size, i.e., use with sums, use <code>wex</code>.</li>
+<li><code>id</code>: The identifier of the original survey.</li>
+<li>`rowid``: A new unique identifier that is unique in all harmonized surveys, i.e., remains unique in the harmonized dataset.</li>
 </ul>
 </div>
 <div id="retrospective-survey-harmonization" class="section level2">
 <h2>Retrospective survey harmonization</h2>
 <p>We will refer here to the other small article introducing retroharmonize as a software.</p>
+<p>We used as inputs the data files containing the following surveys:</p>
+<!--- the survey files are references in datasources.bib -->
+<ul>
+<li>CAP Europe 2007: the datafile of the Eurobarometer Eurobarometer 67.1 (February-March 2007)—<span class="citation">(Commission 2012)</span></li>
+<li>CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013)—<span class="citation">(Commission 2016)</span>,</li>
+<li>CAP Hungary 2017 / not yet included, I can add only a subset of the source file./</li>
+</ul>
+<p>The creation of a harmonized dataset and harmonization codebooks (in the form of schema crosswalk tables) can be found in the <a href="https://retroharmonize.dataobservatory.eu/articles/index.html">documentation website</a> of the retroharmonize R software package and downloaded as an authoritative copy from Zenodo <span class="citation">(Antal 2022a)</span>. As a code tutorial, we published the creation of a harmonized dataset from the Eurostat surveys, because they are available in microdata form, and the creation of the dataset can be fully replicated. This dataset is available as <a href="https://doi.org/10.5281/zenodo.5917742">10.5281/zenodo.5917742</a>, the full dataset with replication code as <not yet created> <span class="citation">(Antal 2022b)</span>.</p>
+<blockquote>
+<p>I will create a unified file, and codebook, by early next week. I already have the written approval to use the Hungary CAP 2015, 2017, 2018, 2019 data, and will seek a written approval for Slovakia 2015, and Slovakia 2020. This may be too much, in which case we will select few national samples.</p>
+</blockquote>
+<p>The European surveys were taken within the Eurobarometer survey program, and we have access to an English-coded file that we always compare with the generic English-Franch questionnaire. The European surveys are ‘waves’ of surveys, which means that in each EU country one, in the UK, Germany and Cyprus two surveys were conducted using the language localizations of the generic English-Franch questionnaire. (which may not be identical to the actual, tested, localized English versions in the United Kingdom and Ireland.)</p>
+<p>The Hungarian surveys and Slovak survey have an original Hungarian and Slovak language questinnoare and coding, however, these surveys were following the Eurobarometer questionnaire’s Hungarian and Slovak version. This means that they contain exactly the same questionnaire items as the Eurobarometer 2007 and Eurobarometer 2013 Hungarian and Slovak surveys, but the files have a Hungarian and Slovak codebook.</p>
+<p>Our software will create a crosswalk table that will help the creation of harmonized, English-language variable names and variable labels in all surveys.</p>
 </div>
 <div id="data-integration" class="section level2">
 <h2>Data integration</h2>
+<blockquote>
+<p>We should be running the data integration analysis through <span class="citation">(D’Orazio 2020)</span> and in the other article explain how the capabilities of <span class="citation">(Antal 2021)</span> are extended by d’Orazio’s StatMatch.</p>
+</blockquote>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
 </div>
-<div id="references" class="section level2">
-<h2>References</h2>
+<div id="appendix" class="section level2 unnumbered">
+<h2 class="unnumbered">Appendix</h2>
+<div id="data-sources" class="section level3 unnumbered">
+<h3 class="unnumbered">Data sources</h3>
+<ul>
+<li>CAP Europe 2007: the datafile of the Eurobarometer Eurobarometer 67.1 (February-March 2007), accompanied with the orgininal codebook, and the master questionnaire (we used the English version.) <span class="citation">(Commission 2012)</span></li>
+<li>CAP Europe 2013: the datafile of the Eurobarometer 79.2 (April-May 2013), accompanied with the orgininal codebook, and the master questionnaire (we used the English version. <span class="citation">(Commission 2016)</span>,</li>
+<li>CAP Hungary 2017 / not yet included, I can add only a subset of the source file./</li>
+</ul>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-r_package_retroharmonize" class="csl-entry">
+Antal, Daniel. 2021. <em><span class="nocase">retroharmonize: updated program interface and documentation</span></em> (version 0.2.4). Zenodo. <a href="https://doi.org/10.5281/zenodo.5781724">https://doi.org/10.5281/zenodo.5781724</a>.
+</div>
+<div id="ref-creating_harmonized_cap_dataset_music" class="csl-entry">
+———. 2022a. <span>“<span class="nocase">Creating a Harmonized Cultural Access &amp; Participation Dataset for Music</span>.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.5917714">https://doi.org/10.5281/zenodo.5917714</a>.
+</div>
+<div id="ref-harmonized_cap_dataset_music" class="csl-entry">
+———. 2022b. <span>“<span class="nocase">Harmonized Cultural Access &amp; Participation Dataset for Music</span>.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.5917742">https://doi.org/10.5281/zenodo.5917742</a>.
+</div>
+<div id="ref-frank_guy_essnet-culture_2012" class="csl-entry">
+Bína, Vladimir, Chantepie, Philippe, Deboin, Valérie, Kommel, Kutt, Kotynek, Josef, and Robin, Philippe. 2012. <span>“<span>ESSnet</span>-<span>CULTURE</span>, European Statistical System Network on Culture. Final Report.”</span> Edited by Frank, Guy. <a href="https://ec.europa.eu/assets/eac/culture/library/reports/ess-net-report_en.pdf">https://ec.europa.eu/assets/eac/culture/library/reports/ess-net-report_en.pdf</a>.
+</div>
+<div id="ref-ZA4529" class="csl-entry">
+Commission, European. 2012. <span>“Eurobarometer 67.1 (Feb-Mar 2007).”</span> GESIS Data Archive, Cologne. ZA4529 Data file Version 3.0.1, https://doi.org/10.4232/1.10983. <a href="https://doi.org/10.4232/1.10983">https://doi.org/10.4232/1.10983</a>.
+</div>
+<div id="ref-ZA5688" class="csl-entry">
+———. 2016. <span>“Eurobarometer 79.2 (2013).”</span> GESIS Data Archive, Cologne. ZA5688 Data file Version 6.0.0, https://doi.org/10.4232/1.12577. <a href="https://doi.org/10.4232/1.12577">https://doi.org/10.4232/1.12577</a>.
+</div>
+<div id="ref-r_package_statmatch" class="csl-entry">
+D’Orazio, Marcello. 2020. <em>StatMatch: Statistical Matching or Data Fusion</em>. <a href="https://CRAN.R-project.org/package=StatMatch">https://CRAN.R-project.org/package=StatMatch</a>.
+</div>
+<div id="ref-de_haan_virtuele_2008" class="csl-entry">
+Haan, Jos de, and Anna Adolfsen. 2008. <em>De Virtuele Cultuurbezoeker - <span>Publieke</span> Belangstelling Voor Cultuurwebsites</em>. <span>SCP</span>-<span>Publicatie</span> 2008/9. Den Haag, the Netherlands: Sociaal en Cultureel Planbureau. <a href="https://archief18.archiefweb.eu/archives/archiefweb/20200311100055/https://www.scp.nl/dsresource?objectid=5c6903f1-e6ae-4e62-9a9b-6d5e1529756a&amp;type=org">https://archief18.archiefweb.eu/archives/archiefweb/20200311100055/https://www.scp.nl/dsresource?objectid=5c6903f1-e6ae-4e62-9a9b-6d5e1529756a&amp;type=org</a>.
+</div>
+<div id="ref-de_haan_nowadays_2012" class="csl-entry">
+Haan, Jos de, and Andries van den Broek. 2012. <span>“Nowadays Cultural Participation - an Update of What to Look for and Where to Look for It.”</span> In <em><span>ESSnet</span>-<span>CULTURE</span>, European Statistical System Network on Culture. Final Report.</em>, 397–417. Luxembourg. <a href="https://ec.europa.eu/assets/eac/culture/library/reports/ess-net-report_en.pdf">https://ec.europa.eu/assets/eac/culture/library/reports/ess-net-report_en.pdf</a>.
+</div>
+</div>
 </div>
 
 

@@ -1,6 +1,10 @@
 ---
 title: "Ex Post Survey Harmonization with retroharmonize"
-author: "Daniel Antal, CFA"
+author:
+  - Daniel Antal, University of Amsterdam
+  - Leo Lahti, University of Turku
+  - Fedele Greco, University of Bologna
+  - Pyry Kantanen, University of Turku
 date: "1/21/2022"
 output:
   word_document: default
@@ -136,7 +140,7 @@ English
 
 ## Reuse potential
 
-Please describe in as much detail as possible the ways in which the software could be reused by other researchers both within and outside of your field. This should include the use cases for the software, and also details of how the software might be modified or extended (including how contributors should contact you) if appropriate. Also you must include details of what support mechanisms are in place for this software (even if there is no support).
+> Please describe in as much detail as possible the ways in which the software could be reused by other researchers both within and outside of your field. This should include the use cases for the software, and also details of how the software might be modified or extended (including how contributors should contact you) if appropriate. Also you must include details of what support mechanisms are in place for this software (even if there is no support).
 
 The retroharmonize R package aims to provide a versatile support for various survey harmonization workflows. Because surveys are so fundamental to quantitative social science research and play an important role in many natural science fields, not to mention commercial applications of market research or pharmaceutical research, the package’s main reuse potential is to be a foundation of further reproducible research software aimed to automate research and harmonization aspects of specific survey programs.
 
