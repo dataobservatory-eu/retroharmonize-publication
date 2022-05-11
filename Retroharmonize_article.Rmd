@@ -2,20 +2,21 @@
 title: "Ex Post Survey Harmonization with retroharmonize"
 author:
   - Daniel Antal, University of Amsterdam
+  - Annamária Tátrai, Eötvös Lóránd University
   - Leo Lahti, University of Turku
-  - Fedele Greco, University of Bologna
   - Pyry Kantanen, University of Turku
-date: "1/21/2022"
+date: "`r Sys.time()`"
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
-subtitle: 'Early Draft. DOI: 10.5281/zenodo.5887001'
+  html_document: default
+  word_document: default
+subtitle: 'Early Draft. DOI: 10.5281/zenodo.6536273'
 bibliography:
 - statisticalmethodology.bib
 - datascience.bib
 - r_packages.bib
 - datainteroperability.bib
+- surveyharmonization.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +26,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Abstract
 _A short (ca. 100 word) summary of the software being described: what problem the software addresses, how it was implemented and architected, where it is stored, and its reuse potential._
 
-Survey data harmonization refers to procedures that improve the data comparability or the inferential capacity of multiple surveys conducted in different periods of time, or in different geographical locations, potentially using different languages.  The retroharmonize package support various data processing, documentation, file/type conversion aspects of various survey harmonization workflows.
+Survey data harmonization refers to procedures that combine survey data from different sources, that is, they harmonize survey data. Survey users often improve the data comparability or the inferential capacity of multiple surveys conducted in different periods of time, or in different geographical locations, potentially using different languages. This approach is known as ex-post output harmonization, or, simply, ex-post or retrospective harmonization. Ex ante, prospective  or input harmonization on the other hand refers to practices of data producers to give more opportunities for retrospective harmonization.
+
+The retroharmonize package support various data processing, documentation, file/type conversion aspects of various survey harmonization workflows. Our examples are made with data from ex ante harmonized surveys---as our examples shows, retrospective harmonization remains a challenging task even when the data producer was designing the surveys with the purpose of data harmonization.
 
 **Keywords** survey data; survey harmonization; statistical matching, open data
 Keywords should make it easy to identify who and what the software will be useful for.
@@ -36,6 +39,8 @@ Keywords should make it easy to identify who and what the software will be usefu
 _An overview of the software, how it was produced, and the research for which it has been used, including references to relevant research articles. A short comparison with software which implements similar functionality should be included in this section._
 
 Surveys, i.e., systematic primary observation and data collections are important data sources of both social and natural sciences. They are in most cases the primary data sources of scientific research.  Drawing information from several surveys, conducted in different locations or in different time can greatly enhance the inferential capacity of the surveys, but it requires significant data processing and statistical processing work. 
+
+"To ensure that answers from respondents surveyed in different settings carry minimal methodological errors and biases and can be meaningfully compared, both data producers and secondary users combine surveys from different sources, that is, they harmonize survey data. Generally, they do so at different stages of the survey lifecycle. Data producers mostly employ harmonization ex-ante, when designing and implementing comparative studies (input harmonization) and when processing the survey data in preparation for their public release (ex-ante output harmonization). […] Secondary users apply harmonization methods retrospectively to already released data files." [@wysmulek_expost_2022]
 
 Survey data harmonization refers to procedures that improve the data comparability or the inferential capacity of multiple surveys conducted in different periods of time, or in different geographical locations, using different languages. Retrospective harmonization, or “survey recycling” is a practice for integrating information from two or more data sources, and to create a from several survey documentations, several codebooks, and several data tables, single, consolidated documents, and tables.  [@slomczynski_principles_survey_data_recycling_2018]
 
@@ -70,7 +75,6 @@ Our package has a rich, long-form, vignette article documentation with examples 
 ## Quality control
 
 Detail the level of testing that has been carried out on the code (e.g. unit, functional, load etc.), and in which environments. If not already included in the software documentation, provide details of how a user could quickly understand if the software is working (e.g. providing examples of running the software with sample input and output data). 
-
 Retroharmonize was extensively tested on privately conducted surveys, and three large, international, ex ante harmonized survey programs (questionnaire-based social science research aimed for ex post or retrospective harmonization across countries and years): Eurobarometer, Afrobarometer and Latinobarometro. 
 
 Our aim was to create a package that can accompany a social scientist working with surveys on a personal computer. We soon realized that working with ex ante harmonized surveys may potentially lead plenty of resources, particularly because the typical file format used for surveys, SPSS, due to its dual data-metadata coding, is not very efficiently imported with tidyverse's haven to R.  All important functions were designed to work either with a list of surveys being documented, subsetted, renamed, recoded, or sequentially.  These functions can take an optional survey_paths (full path) or survey_path and import_path (directory) input, in which case each task is performed sequentially.  The optinal export_path, when given, saves the sequentially intermediate or final outputs with saveRDS as R objects. 
@@ -148,15 +152,17 @@ The authors of this package started the development work to be able to harmonize
 
 **Something about the limitations**
 
-Despite the mature documentation and tested functionality, each data source will require customized treatment. The methods of the _retroharmonize_ package will provide the basis for building reproducible workflows but the fluent use will require good knowledge of the package capabilities.. other limitatiosn..??
+Despite the mature documentation and tested functionality, each data source will require customized treatment. The methods of the _retroharmonize_ package will provide the basis for building reproducible workflows, but the fluent use will require good knowledge of the package capabilities. 
 
-Future work could include improvements on .. 
+In our experience, each survey program has an established vocabulary, standardized language, and similarity in coding errors.  Creating codebooks, crosswalk schemas can be greatly helped by custom dictionaries, which can be published as data packages, for example, for the Eurobarometer or the Afrobarometer survey program.
+
+Future work could include improvements on creating connecting data packages that contain dictionaries and even common coding errors for large survey programs. Such efforts could overlap with prospective harmonization work, such as the creation of standardized questionnaire items, for example, the long running Cross-National Equivalent File (CNEF) project that aggregates both direct and constructed variables from various country’s panel surveys into one easy to access location [@re3data_cnef_2017].
+
+Survey harmonization is often addressed in cross-country comparison, however, we believe that comparisons among sub-national statistics gained from surveys offers even more insight.  For example, individual national surveys within the Eurobarometer program about the United Kingdom contain a separate sample for Norhern Ireland (which is in the European territorial nomenclature a region) and contain subsamples of Great Britain’s regions, for example, Wales.  Apart from Northern Ireland, the UK sub-national samples are not designed to be representative, nontheless, we can create large longitudional files from respondents only from Wales.  Connecting harmonized data output with small area statistics can substantially increase the ecological inferential capabiltiy from survey data – in the European Union only, instead of working with 27 member state’s data, we could create hundreds of subsamples. 
+
 
 
 The challenges in data harmonization and integration have been widely recognized in computational social sciences and digital humanities [@makela_2020]. Thus, in our view, the retroharmonize package has the potential to become a general and widely used supporting software for more specific codes aimed at harmonizing surveys based first on questionnaires, later on different data inputs, such as price scanning, laboratory tests, and other standardized, discrete inputs that are carried out in different locations, with different recording tools, and with different coding (for example, because of natural languages differences, as it is the case in the social science surveys used for the testing of our software.)
-
-
-
 
 ## Acknowledgements
 
