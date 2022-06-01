@@ -1,0 +1,16 @@
+---
+title: "Hungary CAP"
+author: "Daniel Antal, CFA"
+date: "6/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+require(here)
+knitr::opts_chunk$set(echo = TRUE)
+here::here()  ## platform and instance independent relative path management for collaboration
+```
+
+## Create a 
+
+
