@@ -12,6 +12,8 @@ This repo is created to make two publications. Please use the following structur
 
 **data-raw** - data as downloaded, received, as a starting point of our reproducible work. You will find here 5 CAP surveys.
 
+**use_cases** - `.Rmd` files for the individual use cases.
+
 **R** - R code written for the publications.  It is better to write stand-alone R codes, and put final 'chunks' into the `.Rmd` files.
 
 **data** - Final data outputs that will be placed in the articles.
