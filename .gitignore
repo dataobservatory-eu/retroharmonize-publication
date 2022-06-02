@@ -1,5 +1,5 @@
 # Exclude users' not_included directory
-^not_included/
+^not_included$
 
 # History files
 .Rhistory
