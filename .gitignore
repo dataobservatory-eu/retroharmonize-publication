@@ -40,3 +40,8 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+not_included/ZA5688_bq.pdf
+not_included/ZA5688_q_hu.pdf
+not_included/ZA5688_q_ie.pdf
+not_included/ZA5688_q_nl.pdf
+not_included/creating_harmonized_cap_dataset_for_music.pdf
