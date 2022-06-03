@@ -1,12 +1,21 @@
 ---
-title: "Hungary CAP"
+title: "Adding the Hungary CAP 2019 to the Harmonized Cultural Access & Participation Dataset for Music"
 author: "Daniel Antal, CFA"
-date: "6/1/2022"
+date: "6/3/2022"
 output: html_document
 ---
 
+```{r install, eval=FALSE}
+ ## Requires retroharmonize 0.2.5 (development version)
+require("devtools")
+devtools::install_github("rOpenGov/retroharmonize")
+```
+
+
 ```{r setup, include=FALSE}
 require(here)
+require(dplyr)
+library(retroharmonize) 
 knitr::opts_chunk$set(echo = TRUE)
 here::here()  ## platform and instance independent relative path management for collaboration
 ```
@@ -51,28 +60,8 @@ hucap19 <- read_csv(
 
 The `age_education` education level proxy was coded in a different way. The special coding of the `Still studying` and `No finished education` is not consistently coded to values 888 and 999. 
 
-The `is_student` variable is retrieved from the `Occupation` variable. 
+The `is_student` variable is retrieved from the `Occupation` variable.
 
-```{r}
-hucap19 %>%
-   select ( all_of(c("rowid",
-                     "age_exact",
-                     "age_education", 
-                     "age_education_raw",
-                     "occupation"))) %>%
-  mutate ( is_student = ifelse(.data$occupation == "Diák", 1,0)) 
-```
-The Eurobarometer surveys target the population of at least 15 years olds.  The Hungary CAP survey targets at least 10 years olds, and has several weights for comparability. We choose the `weight_15`, `proj_weight_15` weight and projected weight variable, which gives a 0 weight to the 10-14 age group.
-
-```{r hucap19weights}
-hucap19_weights <- hucap19 %>% 
-  select ( .data$rowid, contains("weight")) %>%
-  select ( all_of(c("rowid", "weight_15", "proj_weight_15"))) %>%
-  rename ( w = weight_15,
-           wex = proj_weight_15 )
-set.seed(2019)
-hucap19_weights %>% sample_n(6)
-```
 ```{r hucap19age}
 hucap19_age <- hucap19 %>%
    select ( all_of(c("rowid",
@@ -85,11 +74,32 @@ set.seed(2019)
 hucap19_age %>% sample_n(6)
 ```
 
-The special labelling must be created. 
+The Eurobarometer surveys target the population of at least 15 years olds.  The Hungary CAP survey targets at least 10 years olds, and has several weights for comparability. We choose the `weight_15`, `proj_weight_15` weight and projected weight variable, which gives a 0 weight to the 10-14 age group.
 
-```{r}
- hucap19 %>% 
+```{r hucap19weights}
+hucap19_weights <- hucap19 %>% 
+  select ( .data$rowid, contains("weight")) %>%
+  select ( all_of(c("rowid", "weight_15", "proj_weight_15"))) %>%
+  rename ( w = weight_15,
+           wex = proj_weight_15 )
+set.seed(2019)
+hucap19_weights %>% sample_n(6)
+```
+
+
+The special labelling must be created. (Not finished yet.)
+
+```{r hucap19music}
+hucap19_music <-  hucap19 %>% 
   select(all_of(c("rowid", "visit_concert", "visit_library", "artistic_activity_sung", 
                   "artistic_activity_played_music")))
+```
+
+
+```{r}
+hucap19_music %>%
+  left_join ( hucap19_age, by = 'rowid') %>%
+  left_join ( hucap19_weights, by = 'rowid') %>%
+  sample_n(10)
 ```
 
